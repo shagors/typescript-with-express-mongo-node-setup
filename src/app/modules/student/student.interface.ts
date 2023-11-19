@@ -1,3 +1,9 @@
+export type UserName = {
+  firstName: string;
+  middleName?: string;
+  lastName: string;
+};
+
 export type Guardian = {
   fatherName: string;
   fatherOccupation: string;
@@ -14,16 +20,10 @@ export type LocalGuardian = {
   address: string;
 };
 
-export type UserName = {
-  firstName: string;
-  middleName: string;
-  lastName: string;
-};
-
 export type Student = {
   id: string;
   name: UserName;
-  gender: 'male' | 'female';
+  gender: 'male' | 'female' | 'other';
   dateOfBirth?: string;
   email?: string;
   contactNo: string;
