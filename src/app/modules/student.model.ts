@@ -102,7 +102,6 @@ const studentSchema = new Schema<TStudent, StudentModel>({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    unique: true,
     minlength: [8, 'password muat be minimum 8 characters'],
   },
   name: {
@@ -167,6 +166,10 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum: ['active', 'blocked'],
     default: 'active',
   },
+  isDeleted: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 // pre save middleware / hook
@@ -179,17 +182,36 @@ studentSchema.pre('save', async function (next) {
 });
 
 // post save middleware / hook
-studentSchema.post('save', function () {
-  console.log(this, 'save data');
+studentSchema.post('save', function (doc, next) {
+  doc.password = '';
+  next();
 });
 
-// creating a custome static method
+// Query middleware
+studentSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+// Query middleware
+studentSchema.pre('findOne', function (next) {
+  this.find({ isDeleted: { $ne: true } });
+  next();
+});
+
+// Query middleware
+studentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleteed: { $ne: true } } });
+  next();
+});
+
+// creating a custom static method
 studentSchema.statics.isUserExists = async function (id: string) {
   const existingUser = await Student.findOne({ id });
   return existingUser;
 };
 
-// creating a custome instance method
+// creating a custom instance method
 // studentSchema.methods.isUserExists = async function (id: string) {
 //   const existingUser = await Student.findOne({ id });
 //   return existingUser;
