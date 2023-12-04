@@ -168,7 +168,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
     },
     academicDepartment: {
       type: Schema.Types.ObjectId,
-      ref: "AcademicDepartment"
+      ref: 'AcademicDepartment',
     },
     isDeleted: {
       type: Boolean,
@@ -182,7 +182,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 
 // vitual mongoose
 studentSchema.virtual('fullName').get(function () {
-  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`;
+  return `${this?.name?.firstName} ${this?.name?.middleName} ${this?.name?.lastName}`;
 });
 
 // Query middleware
